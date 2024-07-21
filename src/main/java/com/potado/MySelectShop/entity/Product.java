@@ -1,5 +1,6 @@
 package com.potado.MySelectShop.entity;
 
+import com.potado.MySelectShop.dto.ItemDto;
 import com.potado.MySelectShop.dto.request.ProductMypriceRequestDto;
 import com.potado.MySelectShop.dto.request.ProductRequestDto;
 import jakarta.persistence.*;
@@ -42,5 +43,9 @@ public class Product extends Timestamped {
 
     public void update(ProductMypriceRequestDto requestDto) {
         this.myprice = requestDto.getMyprice();
+    }
+
+    public void updateByItemDto(ItemDto itemDto) {
+        this.lprice = itemDto.getLprice();
     }
 }

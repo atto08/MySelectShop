@@ -1,5 +1,6 @@
 package com.potado.MySelectShop.service;
 
+import com.potado.MySelectShop.dto.ItemDto;
 import com.potado.MySelectShop.dto.request.ProductMypriceRequestDto;
 import com.potado.MySelectShop.dto.request.ProductRequestDto;
 import com.potado.MySelectShop.dto.response.ProductResponseDto;
@@ -51,5 +52,14 @@ public class ProductService {
         }
 
         return productResponseDtoList;
+    }
+
+    @Transactional
+    public void updateBySearch(Long id, ItemDto itemDto) {
+
+        Product product = productRepository.findById(id).orElseThrow(
+                () -> new NullPointerException("해당 상품을 찾을 수 없습니다."));
+
+        product.updateByItemDto(itemDto);
     }
 }
