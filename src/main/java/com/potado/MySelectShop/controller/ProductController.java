@@ -6,6 +6,7 @@ import com.potado.MySelectShop.dto.response.ProductResponseDto;
 import com.potado.MySelectShop.security.UserDetailsImpl;
 import com.potado.MySelectShop.service.ProductService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +33,13 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public List<ProductResponseDto> getProducts(@AuthenticationPrincipal UserDetailsImpl userDetails){
+    public Page<ProductResponseDto> getProducts(
+            @RequestParam("page") int page,
+            @RequestParam("size") int size,
+            @RequestParam("sortBy") String sortBy,
+            @RequestParam("isAsc") boolean isAsc,
+            @AuthenticationPrincipal UserDetailsImpl userDetails) {
 
-        return productService.getProducts(userDetails.getUser());
-    }
-
-    @GetMapping("/admin/products")
-    public List<ProductResponseDto> getAllProducts(){
-        return productService.getAllProducts();
+        return productService.getProducts(userDetails.getUser(), page - 1, size, sortBy, isAsc);
     }
 }
