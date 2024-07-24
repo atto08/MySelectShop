@@ -6,8 +6,14 @@ import com.potado.MySelectShop.dto.request.ProductRequestDto;
 import com.potado.MySelectShop.dto.response.ProductResponseDto;
 import com.potado.MySelectShop.entity.Product;
 import com.potado.MySelectShop.entity.User;
+import com.potado.MySelectShop.entity.UserRoleEnum;
 import com.potado.MySelectShop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.query.SortDirection;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,16 +49,22 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
-    public List<ProductResponseDto> getProducts(User user) {
+    public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {
 
-        List<Product> productList = productRepository.findAllByUser(user);
-        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
+        // 페이지 처리
+        Sort.Direction direction = isAsc ? Sort.Direction.ASC : Sort.Direction.DESC;
+        Sort sort = Sort.by(direction, sortBy);
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        for (Product product : productList) {
-            productResponseDtoList.add(new ProductResponseDto(product));
-        }
+       Page<Product> productList;
 
-        return productResponseDtoList;
+       if (user.getRole() == UserRoleEnum.USER){
+           productList = productRepository.findAllByUser(user, pageable);
+       } else {
+           productList = productRepository.findAll(pageable);
+       }
+
+       return productList.map(ProductResponseDto::new);
     }
 
     @Transactional
@@ -62,17 +74,5 @@ public class ProductService {
                 () -> new NullPointerException("해당 상품을 찾을 수 없습니다."));
 
         product.updateByItemDto(itemDto);
-    }
-
-    public List<ProductResponseDto> getAllProducts() {
-
-        List<Product> productList = productRepository.findAll();
-        List<ProductResponseDto> productResponseDtoList = new ArrayList<>();
-
-        for (Product product : productList) {
-            productResponseDtoList.add(new ProductResponseDto(product));
-        }
-
-        return productResponseDtoList;
     }
 }
