@@ -9,16 +9,12 @@ import com.potado.MySelectShop.entity.User;
 import com.potado.MySelectShop.entity.UserRoleEnum;
 import com.potado.MySelectShop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.query.SortDirection;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +45,7 @@ public class ProductService {
         return new ProductResponseDto(product);
     }
 
+    @Transactional(readOnly = true)
     public Page<ProductResponseDto> getProducts(User user, int page, int size, String sortBy, boolean isAsc) {
 
         // 페이지 처리
@@ -56,15 +53,15 @@ public class ProductService {
         Sort sort = Sort.by(direction, sortBy);
         Pageable pageable = PageRequest.of(page, size, sort);
 
-       Page<Product> productList;
+        Page<Product> productList;
 
-       if (user.getRole() == UserRoleEnum.USER){
-           productList = productRepository.findAllByUser(user, pageable);
-       } else {
-           productList = productRepository.findAll(pageable);
-       }
+        if (user.getRole() == UserRoleEnum.USER) {
+            productList = productRepository.findAllByUser(user, pageable);
+        } else {
+            productList = productRepository.findAll(pageable);
+        }
 
-       return productList.map(ProductResponseDto::new);
+        return productList.map(ProductResponseDto::new);
     }
 
     @Transactional
