@@ -4,9 +4,9 @@ import com.potado.MySelectShop.dto.ItemDto;
 import com.potado.MySelectShop.dto.request.ProductMypriceRequestDto;
 import com.potado.MySelectShop.dto.request.ProductRequestDto;
 import com.potado.MySelectShop.dto.response.ProductResponseDto;
-import com.potado.MySelectShop.entity.Product;
-import com.potado.MySelectShop.entity.User;
-import com.potado.MySelectShop.entity.UserRoleEnum;
+import com.potado.MySelectShop.entity.*;
+import com.potado.MySelectShop.repository.FolderRepository;
+import com.potado.MySelectShop.repository.ProductFolderRepository;
 import com.potado.MySelectShop.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,11 +16,18 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    private final FolderRepository folderRepository;
+
+    private final ProductFolderRepository productFolderRepository;
+
     public static final int MIN_MY_PRICE = 100;
 
     public ProductResponseDto createProduct(ProductRequestDto requestDto, User user) {
@@ -71,5 +78,26 @@ public class ProductService {
                 () -> new NullPointerException("해당 상품을 찾을 수 없습니다."));
 
         product.updateByItemDto(itemDto);
+    }
+
+    public void addFolder(Long productId, Long folderId, User user) {
+
+        Product product = productRepository.findById(productId).orElseThrow(
+                () -> new NullPointerException("존재하지 않는 상품입니다."));
+
+        Folder folder = folderRepository.findById(folderId).orElseThrow(
+                () -> new NullPointerException("존재하지 않는 폴더입니다."));
+
+        if (!product.getUser().getId().equals(user.getId()) || !folder.getUser().getId().equals(user.getId())) {
+            throw new IllegalArgumentException("회원님의 관심상품 또는 폴더가 아닙니다.");
+        }
+
+        Optional<ProductFolder> overlapFolder = productFolderRepository.findByProductAndFolder(product, folder);
+        if (overlapFolder.isPresent()) {
+            throw new IllegalArgumentException("중복된 폴더 입니다.");
+        }
+
+        productFolderRepository.save(new ProductFolder(product, folder));
+
     }
 }
