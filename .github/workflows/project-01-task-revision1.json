@@ -1,13 +1,13 @@
 {
-    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:851725371620:task-definition/project-01-task:1",
+    "taskDefinitionArn": "arn:aws:ecs:ap-northeast-2:851725371620:task-definition/myselectshop-task:1",
     "containerDefinitions": [
         {
-            "name": "project-01-container",
-            "image": "851725371620.dkr.ecr.ap-northeast-2.amazonaws.com/group16995032/project-01",
+            "name": "myselectshop-container",
+            "image": "851725371620.dkr.ecr.ap-northeast-2.amazonaws.com/myselectshop",
             "cpu": 0,
             "portMappings": [
                 {
-                    "name": "project-01-container-8080-tcp",
+                    "name": "myselectshop-container-8080-tcp",
                     "containerPort": 8080,
                     "hostPort": 8080,
                     "protocol": "tcp",
@@ -23,7 +23,7 @@
             "logConfiguration": {
                 "logDriver": "awslogs",
                 "options": {
-                    "awslogs-group": "/ecs/project-01-task",
+                    "awslogs-group": "/ecs/myselectshop-task",
                     "awslogs-create-group": "true",
                     "awslogs-region": "ap-northeast-2",
                     "awslogs-stream-prefix": "ecs"
@@ -33,7 +33,7 @@
             "systemControls": []
         }
     ],
-    "family": "project-01-task",
+    "family": "myselectshop-task",
     "executionRoleArn": "arn:aws:iam::851725371620:role/ecsTaskExecutionRole",
     "networkMode": "awsvpc",
     "revision": 1,
@@ -79,7 +79,7 @@
         "cpuArchitecture": "X86_64",
         "operatingSystemFamily": "LINUX"
     },
-    "registeredAt": "2024-08-11T05:38:00.079Z",
+    "registeredAt": "2024-08-12T02:49:08.608Z",
     "registeredBy": "arn:aws:iam::851725371620:root",
     "tags": []
 }

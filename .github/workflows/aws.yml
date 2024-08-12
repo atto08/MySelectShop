@@ -32,12 +32,12 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2                  # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: group16995032/project-01        # set this to your Amazon ECR repository name
-  ECS_SERVICE: project-01-service                 # set this to your Amazon ECS service name
-  ECS_CLUSTER: project-cluster                # set this to your Amazon ECS cluster name
+  ECR_REPOSITORY: myselectshop       # set this to your Amazon ECR repository name
+  ECS_SERVICE: myselectshop-service                 # set this to your Amazon ECS service name
+  ECS_CLUSTER: myselectshop-cluster                # set this to your Amazon ECS cluster name
   ECS_TASK_DEFINITION: .github/workflows/project-01-task-revision1.json # set this to the path to your Amazon ECS task definition
                                                # file, e.g. .aws/task-definition.json
-  CONTAINER_NAME: project-01-container           # set this to the name of the container in the
+  CONTAINER_NAME: myselectshop-container           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
 permissions:
