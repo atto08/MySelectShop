@@ -7,8 +7,8 @@ spring:
       enabled: ALWAYS
 
   datasource:
-    url: jdbc:mysql://localhost:3306/shop
-    username: root
+    url: jdbc:mysql://myselectshop-db.c7macw662hfi.ap-northeast-2.rds.amazonaws.com:3306/shop
+    username: admin
     password: ${{secrets.DATABASE_SECRET_KEY}}
     driver-class-name: com.mysql.cj.jdbc.Driver
 
